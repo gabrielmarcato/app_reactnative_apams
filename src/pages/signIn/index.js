@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 
-import { StatusBar, AsyncStorage } from 'react-native';
-import { StackActions, NavigationActions } from 'react-navigation';
+import { StatusBar, AsyncStorage } from "react-native";
+import { StackActions, NavigationActions } from "react-navigation";
 
-import api from '../../services/api';
+import api from "../../services/api";
 
 import {
   Container,
@@ -15,8 +15,7 @@ import {
   ButtonText,
   SignUpLink,
   SignUpLinkText,
-} from './styles';
-
+} from "./styles";
 
 export default class SignIn extends Component {
   static navigationOptions = {
@@ -31,46 +30,65 @@ export default class SignIn extends Component {
   };
 
   state = {
-    email: 'email@email',
-    password: '12345',
-    error: '',
+    email: "email@email",
+    password: "12345",
+    error: "",
   };
 
-  handleEmailChange = (email) => {
+  handleEmailChange = email => {
     this.setState({ email });
   };
 
-  handlePasswordChange = (password) => {
+  handlePasswordChange = password => {
     this.setState({ password });
   };
 
   handleCreateAccountPress = () => {
-    this.props.navigation.navigate('SignUp');
+    this.props.navigation.navigate("SignUp");
   };
 
   handleSignInPress = async () => {
     if (this.state.email.length === 0 || this.state.password.length === 0) {
-      this.setState({ error: 'Preencha usuário e senha para continuar!' }, () => false);
+      this.setState(
+        { error: "Preencha usuário e senha para continuar!" },
+        () => false,
+      );
     } else {
       try {
-        const response = await api.post('/login', {
+        const response = await api.post("/login", {
           email: this.state.email,
           password: this.state.password,
         });
 
-        await AsyncStorage.setItem('@AppApams:token', response.data.token);
+        await AsyncStorage.setItem("@AppApams:token", response.data.token);
+
+        const listResponse = await api.get("/ENDPOINTLISTA", {
+          headers: {
+            access_token: response.data.token,
+          },
+        });
+        
+        await AsyncStorage.setItem(
+          "@AppApams:blogList",
+          JSON.stringify(listResponse.data),
+        );
 
         console.log(response.data.token);
 
         const resetAction = StackActions.reset({
           index: 0,
           actions: [
-            NavigationActions.navigate({ routeName: 'Main', params: { token: response.data.token } }),
+            NavigationActions.navigate({
+              routeName: "Main",
+              params: { token: response.data.token },
+            }),
           ],
         });
         this.props.navigation.dispatch(resetAction);
       } catch (_err) {
-        this.setState({ error: 'Houve um problema com o login, verifique suas credenciais!' });
+        this.setState({
+          error: "Houve um problema com o login, verifique suas credenciais!",
+        });
       }
     }
   };
@@ -79,7 +97,10 @@ export default class SignIn extends Component {
     return (
       <Container>
         <StatusBar hidden />
-        <Logo source={require('../../images/apams_logo.png')} resizeMode="contain" />
+        <Logo
+          source={require("../../images/apams_logo.png")}
+          resizeMode="contain"
+        />
         <Input
           placeholder="Endereço de e-mail"
           value={this.state.email}
@@ -95,7 +116,9 @@ export default class SignIn extends Component {
           autoCorrect={false}
           secureTextEntry
         />
-        {this.state.error.length !== 0 && <ErrorMessage>{this.state.error}</ErrorMessage>}
+        {this.state.error.length !== 0 && (
+          <ErrorMessage>{this.state.error}</ErrorMessage>
+        )}
         <Button onPress={this.handleSignInPress}>
           <ButtonText>Entrar</ButtonText>
         </Button>
