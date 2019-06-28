@@ -44,7 +44,7 @@ const Button = styled.TouchableHighlight`
   borderRadius: 5px;
   backgroundColor: #FFF;
   alignSelf: stretch;
-  margin: 15px;
+  margin: 20px;
   marginHorizontal: 20px;
 `;
 

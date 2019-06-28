@@ -21,48 +21,10 @@ import {
   TabHeading,
   Card,
   CardItem,
+  Separator,
+  Accordion
 } from "native-base";
 import { Image, StyleSheet, AsyncStorage } from "react-native";
-
-// import styles from './styles';
-
-const messages = [
-  {
-    id: 1,
-    name: "Diego Fernandes",
-    avatar_url: "",
-    last_message: "Lorem ipsum",
-    time: "18:20 PM",
-  },
-  {
-    id: 2,
-    name: "Claudio Orlandi",
-    avatar_url: "",
-    last_message: "Lorem ipsum",
-    time: "10:12 AM",
-  },
-];
-
-const blogListArray = [
-  {
-    id: 1,
-    title: "Mylka",
-    image_url:
-      "http://www.apams.com.br/class/phpThumb/phpThumb.php?src=../../upload/mod_equipes/157/5c9b69c3ca6a2.jpg&w=680",
-    description:
-      "Mylka foi encontrada por uma antiga colaboradora do abrigo, foi achada na rua muito fraca e desnutrida e ainda portando TVT. Hoje, após muitos cuidados e atendimentos ela esta muito bem nutrida e feliz , mas pode ficar ainda mais , só falta um novo lar!",
-    likes: "999",
-  },
-  {
-    id: 2,
-    title: "Mateus",
-    image_url:
-      "http://www.apams.com.br/class/phpThumb/phpThumb.php?src=../../upload/mod_equipes/195/5ca4bfe21b586.jpg&w=680",
-    description:
-      "Mateus foi resgatado pela Samara, precisou ser resgatado após estar doente na rua sem auxilio nenhum, trouxemos ao abrigo para todos procedimentos necessarios.",
-    likes: "998",
-  },
-];
 
 const Home = ({ blogList }) => {
   if (blogList === []) {
@@ -76,31 +38,34 @@ const Home = ({ blogList }) => {
             <Left>
               <Body>
                 <Text>{blog.title}</Text>
+                <Text note>{blog.animalName}</Text>
               </Body>
             </Left>
           </CardItem>
           <CardItem cardBody>
             <Image
-              source={{ uri: blog.image_url }}
+              source={{ uri: blog.avatarAnimal }}
               style={{ height: 200, width: null, flex: 1 }}
             />
           </CardItem>
-          <CardItem>
+          <CardItem style={styles.bordaBottom}>
             <Left>
               <Body>
-                <Text>{blog.description}</Text>
+                <Text>Descrição</Text>
+                <Text note>{blog.description}</Text>
               </Body>
             </Left>
           </CardItem>
           <CardItem>
             <Left>
               <Button transparent>
-                <Icon active name="thumbs-up" />
-                <Text>{blog.likes}</Text>
+                <Icon style={{ color: "#f96" }} type="FontAwesome" name="paw" />
+                <Text style={{ color: "#f96" }}>{blog.likes}</Text>
               </Button>
             </Left>
-            <Body />
-            <Right />
+            <Right>
+              <Text note>{blog.data}</Text>
+            </Right>
           </CardItem>
         </Card>
       ))}
@@ -108,59 +73,117 @@ const Home = ({ blogList }) => {
   );
 };
 
-const Messages = ({ messages }) => (
-  <Fragment>
-    <List>
-      {messages.map(message => (
-        <ListItem avatar key={message.id}>
-          <Left>
-            <Thumbnail source={{ uri: message.avatar_url }} />
-          </Left>
-          <Body>
-            <Text>{message.name}</Text>
-            <Text note>{message.last_message}</Text>
-          </Body>
-          <Right>
-            <Text note>{message.time}</Text>
-          </Right>
-        </ListItem>
-      ))}
-    </List>
-  </Fragment>
-);
 
-const Notification = () => null;
+
+// const Messages = ({ messages }) => {
+//   if (messages === []) {
+//     return;
+//   }
+//   return( 
+//     <Fragment>
+//       <List>
+//         {messages.map(message => (
+//           <ListItem avatar key={message.id}>
+//             <Left>
+//               <Thumbnail source={{ uri: message.avatar_url }} />
+//             </Left>
+//             <Body>
+//               <Text>{message.name}</Text>
+//               <Text note>{message.last_message}</Text>
+//             </Body>
+//             <Right>
+//               <Text note>{message.time}</Text>
+//             </Right>
+//           </ListItem>
+//         ))}
+//       </List>
+//     </Fragment>
+//   );
+// };
+
+const Profile = ({ profile }) => {
+  if (profile === []) {
+       return;
+  }
+  return (
+    <Container>
+        <Content>
+          <Separator bordered>
+            <Text style={{ fontSize: 15 }}>Dados usuário</Text>
+          </Separator>
+            <ListItem>
+              <Text>Nome: </Text>
+              <Text note>Profile</Text>
+            </ListItem>
+            <ListItem last>
+              <Text>E-mail: </Text>
+              <Text note>email@email</Text>
+            </ListItem>
+          <Separator bordered>
+            <Text style={{ fontSize: 15 }}>Sobre</Text>
+          </Separator>
+          <ListItem>
+            <Text>Turma ADS - FASIPE 2017/1</Text>
+          </ListItem>
+          <ListItem last>
+            <Text>Data de produção: </Text>
+            <Text note>29/06/2019</Text>
+          </ListItem>
+          <Separator bordered>
+            <Text style={{ fontSize: 15 }}>Desenvolvimento</Text>
+          </Separator>
+          <ListItem style={{ justifyContent: "space-between" }}>
+            <Text>Mauro Pacheco Moura </Text>
+            <Text note>LinkedIn</Text>
+          </ListItem>
+          <ListItem style={{ justifyContent: "space-between" }} last>
+            <Text>Gabriel Oliveira Marcato </Text>
+            <Text note>LinkedIn</Text>
+          </ListItem>
+        </Content>
+      </Container>
+  );
+};
+
 
 export default class Main extends Component {
+
   static navigationOptions = {
     header: null,
   };
+
   constructor(props) {
     super(props);
     this.state = {
-      title: "Titulo",
-      image: "url",
+      title: "",
+      image: "",
       likes: "",
       desc: "",
-      date: "date/time",
+      date: "",
       blogList: [],
+      messages: [],
+      profile: []
     };
   }
 
   componentWillMount = async () => {
     const blogList = await AsyncStorage.getItem("@AppApams:blogList");
     this.setState({ blogList: JSON.parse(blogList) });
+
+    // const messages = await AsyncStorage.getItem("@AppApams:messages");
+    // this.setState({ messages: JSON.parse(messages) });
+
+    const profile = await AsyncStorage.getItem("@AppApams:profile");
+    this.setState({ profile: JSON.parse(profile) });
   };
 
   render() {
     return (
       <Container>
         <Header androidStatusBarColor="#f96" style={styles.header} hasTabs>
-          <Left>
+          <Body style={{ flex: 1, flexDirection: 'row', justifyContent: "center", alignItems: "center" }}>
             <Thumbnail small source={require("../../images/logo.png")} />
-          </Left>
-          <Body>
-            <Title>APAMS</Title>
+            <Title>   APAMS</Title>
           </Body>
         </Header>
         <View style={styles.container}>
@@ -181,16 +204,17 @@ export default class Main extends Component {
                 </TabHeading>
               }
             >
-              <Notification />
+              {/* <Messages messages={this.state.messages} /> */}
+              <View />
             </Tab>
             <Tab
               heading={
                 <TabHeading style={styles.tabHeading}>
-                  <Icon type="FontAwesome" name="envelope-o" />
+                  <Icon type="FontAwesome" name="user" />
                 </TabHeading>
               }
             >
-              <Messages messages={messages} />
+              <Profile />
             </Tab>
           </Tabs>
         </View>
@@ -208,5 +232,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  bordaBottom: {
+    borderBottomWidth: 1,
+    borderColor: "#ccc"
   },
 });

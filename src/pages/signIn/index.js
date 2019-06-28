@@ -62,7 +62,7 @@ export default class SignIn extends Component {
 
         await AsyncStorage.setItem("@AppApams:token", response.data.token);
 
-        const listResponse = await api.get("/ENDPOINTLISTA", {
+        const listResponse = await api.get("/posts/show", {
           headers: {
             access_token: response.data.token,
           },
@@ -73,7 +73,16 @@ export default class SignIn extends Component {
           JSON.stringify(listResponse.data),
         );
 
-        console.log(response.data.token);
+        const listProfile = await api.get("/user/profile", {
+          headers: {
+            access_token: response.data.token,
+          },
+        });
+        
+        await AsyncStorage.setItem(
+          "@AppApams:profile",
+          JSON.stringify(listProfile.data),
+        );
 
         const resetAction = StackActions.reset({
           index: 0,

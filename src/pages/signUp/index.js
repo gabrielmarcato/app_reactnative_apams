@@ -6,6 +6,7 @@ import { StatusBar } from 'react-native';
 import api from '../../services/api';
 import { StackActions, NavigationActions } from 'react-navigation';
 
+
 import {
   Container,
   Logo,
@@ -32,9 +33,9 @@ export default class SignUp extends Component {
   };
 
   state = {
-    name: 'Nome',
-    email: 'email@email',
-    password: '12345',
+    name: '',
+    email: '',
+    password: '',
     error: '',
     success: '',
   };

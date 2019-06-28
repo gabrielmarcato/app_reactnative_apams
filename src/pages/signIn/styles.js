@@ -36,8 +36,8 @@ const Button = styled.TouchableHighlight`
   borderRadius: 5px;
   backgroundColor: #FFF;
   alignSelf: stretch;
-  margin: 15px;
-  marginHorizontal: 20px;
+  margin: 20px;
+  marginHorizontal: 22px;
 `;
 
 const ButtonText = styled.Text`
