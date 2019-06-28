@@ -5,9 +5,9 @@ import SignUp from './pages/signUp';
 import Main from './pages/main';
 
 const Routes = createStackNavigator({
+  Main,
   SignIn,
   SignUp,
-  Main,
 });
 
 export default createAppContainer(Routes);
