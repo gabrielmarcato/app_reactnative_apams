@@ -25,8 +25,19 @@ import {
   Accordion
 } from "native-base";
 import { Image, StyleSheet, AsyncStorage } from "react-native";
+import axios from 'axios';
+
+const likes = (id) => {
+  console.log(id)
+  axios.get("@AppApams:blogList/like/", { id })
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    })
+}
 
 const Home = ({ blogList }) => {
+  console.log(blogList)
   if (blogList === []) {
     return;
   }
@@ -58,7 +69,7 @@ const Home = ({ blogList }) => {
           </CardItem>
           <CardItem>
             <Left>
-              <Button transparent>
+              <Button transparent onPress={() => likes(blog.id)}>
                 <Icon style={{ color: "#f96" }} type="FontAwesome" name="paw" />
                 <Text style={{ color: "#f96" }}>{blog.likes}</Text>
               </Button>
@@ -101,10 +112,10 @@ const Home = ({ blogList }) => {
 //   );
 // };
 
+
+
 const Profile = ({ profile }) => {
-  if (profile === []) {
-       return;
-  }
+
   return (
     <Container>
         <Content>
@@ -113,11 +124,11 @@ const Profile = ({ profile }) => {
           </Separator>
             <ListItem>
               <Text>Nome: </Text>
-              <Text note>Profile</Text>
+              <Text note>{profile[0].name}</Text>
             </ListItem>
             <ListItem last>
               <Text>E-mail: </Text>
-              <Text note>email@email</Text>
+              <Text note>{profile[0].email}</Text>
             </ListItem>
           <Separator bordered>
             <Text style={{ fontSize: 15 }}>Sobre</Text>
@@ -162,7 +173,8 @@ export default class Main extends Component {
       date: "",
       blogList: [],
       messages: [],
-      profile: []
+      profile: [],
+      url: ""
     };
   }
 
@@ -175,7 +187,10 @@ export default class Main extends Component {
 
     const profile = await AsyncStorage.getItem("@AppApams:profile");
     this.setState({ profile: JSON.parse(profile) });
+
   };
+
+  
 
   render() {
     return (
@@ -214,7 +229,7 @@ export default class Main extends Component {
                 </TabHeading>
               }
             >
-              <Profile />
+              <Profile profile={this.state.profile} />
             </Tab>
           </Tabs>
         </View>
