@@ -26,10 +26,15 @@ import {
 } from "native-base";
 import { Image, StyleSheet, AsyncStorage } from "react-native";
 import axios from 'axios';
+import api from "../../services/api";
 
 const likes = (id) => {
-  console.log(id)
-  axios.get("@AppApams:blogList/like/", { id })
+  axios.get("@AppApams:blogList/posts/like", { id }, {
+    headers:{
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Accept': 'application/json'
+    }
+  })
     .then(res => {
       console.log(res);
       console.log(res.data);
@@ -37,10 +42,7 @@ const likes = (id) => {
 }
 
 const Home = ({ blogList }) => {
-  console.log(blogList)
-  if (blogList === []) {
-    return;
-  }
+
   return (
     <Content>
       {blogList.map(blog => (
@@ -174,7 +176,7 @@ export default class Main extends Component {
       blogList: [],
       messages: [],
       profile: [],
-      url: ""
+
     };
   }
 

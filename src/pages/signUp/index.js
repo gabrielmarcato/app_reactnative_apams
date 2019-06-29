@@ -33,9 +33,9 @@ export default class SignUp extends Component {
   };
 
   state = {
-    name: '',
-    email: '',
-    password: '',
+    name: 'Gabriel Marcato',
+    email: 'gabrielomarcato@mail.com',
+    password: '123456',
     error: '',
     success: '',
   };
